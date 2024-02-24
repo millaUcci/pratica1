@@ -1,3 +1,4 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SudokuGame {
@@ -42,8 +43,15 @@ public class SudokuGame {
                     System.out.print("| ");
                 }
 
+                // Adiciona cor verde se a linha, coluna ou subquadrado estiver completo
+                if (isRowComplete(i) || isColumnComplete(j) || isSquareComplete(i, j)) {
+                    System.out.print("\033[32m" + board[i][j] + "\033[0m "); // Código ANSI para cor verde
+                } else {
+                    System.out.print(board[i][j] + " ");
+                }
             }
             System.out.println();
+
         }
     }
 
@@ -106,20 +114,9 @@ public class SudokuGame {
 
             if (board[row][col] != 0) {
                 board[row][col] = 0;
-                emptyCells++;
+                emptyCells--;
             }
         }
-    }
-
-    private boolean isFilled() {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (board[i][j] == 0) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     private boolean isBoardValid() {
@@ -194,37 +191,42 @@ public class SudokuGame {
         sudokuGame.printBoard();
 
         while (!sudokuGame.isGameComplete() || !sudokuGame.isBoardValid()) {
-            System.out.println("\nInsira sua jogada (linha coluna valor), ou '0' para sair:");
-            int row = scanner.nextInt();
-            if (row == 0) {
-                System.out.println("Jogo encerrado.");
-                break;
-            }
-            int col = scanner.nextInt();
-            int value = scanner.nextInt();
+            try {
+                System.out.println("\nInsira sua jogada (linha coluna valor), ou '0' para sair:");
+                int row = scanner.nextInt();
+                if (row == 0) {
+                    System.out.println("Jogo encerrado.");
+                    break;
+                }
+                int col = scanner.nextInt();
+                int value = scanner.nextInt();
 
-            if (row < 1 || row > 9 || col < 1 || col > 9 || value < 1 || value > 9) {
-                System.out.println("Jogada inválida. Tente novamente.");
-                continue;
-            }
-
-            if (sudokuGame.originalBoard[row - 1][col - 1] != 0) {
-                System.out.println("Você não pode modificar este valor. Tente novamente.");
-                continue;
-            }
-
-            if (sudokuGame.isValidMove(row - 1, col - 1, value)) {
-                sudokuGame.board[row - 1][col - 1] = value;
-                sudokuGame.printBoard();
-
-                // Verificar se uma linha, coluna ou quadrado foi completado
-                if (sudokuGame.isRowComplete(row - 1) || sudokuGame.isColumnComplete(col - 1) ||
-                        sudokuGame.isSquareComplete((row - 1) / 3 * 3, (col - 1) / 3 * 3)) {
-                    System.out.println("Parabéns! Você completou uma linha, coluna ou quadrado!");
+                if (row < 1 || row > 9 || col < 1 || col > 9 || value < 1 || value > 9) {
+                    System.out.println("Jogada inválida. Tente novamente.");
+                    continue;
                 }
 
-            } else {
-                System.out.println("Jogada inválida. Tente novamente.");
+                if (sudokuGame.originalBoard[row - 1][col - 1] != 0) {
+                    System.out.println("Você não pode modificar este valor. Tente novamente.");
+                    continue;
+                }
+
+                if (sudokuGame.isValidMove(row - 1, col - 1, value)) {
+                    sudokuGame.board[row - 1][col - 1] = value;
+                    sudokuGame.printBoard();
+
+                    // Verificar se uma linha, coluna ou quadrado foi completado
+                    if (sudokuGame.isRowComplete(row - 1) || sudokuGame.isColumnComplete(col - 1) ||
+                            sudokuGame.isSquareComplete((row - 1) / 3 * 3, (col - 1) / 3 * 3)) {
+                        System.out.println("Parabéns! Você completou uma linha, coluna ou quadrado!");
+                    }
+
+                } else {
+                    System.out.println("Jogada inválida. Tente novamente.");
+                }
+            }catch (InputMismatchException ime){
+                System.out.println("A linha, a coluna e o valor de sua jogada precisam ser números inteiros! Tente novamente.");
+                scanner.nextLine();
             }
         }
 
