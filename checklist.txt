@@ -1,0 +1,37 @@
+-> Code Review Checklist
+
+
+
+- Geral
+
+> O código é compilado sem erros;
+
+> O código é facil de compreender;
+
+> Não existem trechos de código redundantes/duplicados;
+
+> Códigos comentados foram removidos.
+
+
+
+
+
+- Segurança
+
+> Todos os inputs são validados em relação a tipagem, tamanho, formato e valores.
+
+
+
+- Documentação
+
+> Nomes de variáveis, classes e métodos são significativos e claros;
+
+> Nomes de variáveis, classes e métodos respeitam o camel case;
+
+> São utilizados de comentários para explicar estruturas menos claras e métodos principais.
+
+
+
+- Performance
+
+> Uso de estruturas de decisões é consciente para diminuir a complexidade da execução.
